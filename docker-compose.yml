@@ -1,0 +1,22 @@
+version: '3'
+services:
+  admin-api:
+    env_file: .env
+    image: ${IMAGE}
+    restart: always
+    ports:
+      - 9007:9007
+    environment:
+      - RUN_ENV=prod
+    privileged: true
+    sysctls:
+      net.core.somaxconn: 32768
+
+  celery:
+    env_file: .env
+    image: ${IMAGE}
+    restart: always
+    environment:
+      - C_FORCE_ROOT=true
+      - RUN_ENV=prod
+    command: celery worker -A project -l info
